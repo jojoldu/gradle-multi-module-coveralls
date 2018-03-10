@@ -1,4 +1,4 @@
-package com.jojoldu.multi.external;
+package com.jojoldu.multi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
