@@ -1,0 +1,3 @@
+rootProject.name = 'gradle-multi-modules-coveralls'
+
+include 'core', 'web', 'external'
