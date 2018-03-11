@@ -4,6 +4,7 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
+		jcenter()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -14,10 +15,6 @@ buildscript {
 allprojects {
 	apply plugin: 'com.github.kt3k.coveralls'
 	apply plugin: 'jacoco'
-
-	repositories {
-		jcenter()
-	}
 }
 
 subprojects {
