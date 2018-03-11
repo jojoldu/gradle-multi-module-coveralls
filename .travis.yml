@@ -16,7 +16,7 @@ cache:
 script: "./gradlew clean build"
 
 after_success:
-- ./gradlew coveralls --continue
+- ./gradlew jacocoRootReport coveralls
 
 notifications:
     webhooks: https://fathomless-fjord-24024.herokuapp.com/notify

@@ -11,11 +11,16 @@ buildscript {
 	}
 }
 
-apply plugin: 'com.github.kt3k.coveralls'
-apply plugin: 'jacoco'
+allprojects {
+	apply plugin: 'com.github.kt3k.coveralls'
+	apply plugin: 'jacoco'
+
+	repositories {
+		jcenter()
+	}
+}
 
 subprojects {
-	apply plugin: 'jacoco'
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
 	apply plugin: 'org.springframework.boot'
@@ -32,35 +37,24 @@ subprojects {
 	dependencies {
 		testCompile('org.springframework.boot:spring-boot-starter-test')
 	}
+
+	jacocoTestReport {
+		reports {
+			html.enabled = true
+			xml.enabled = true
+			csv.enabled = false
+		}
+	}
 }
 
-def publishedProjects = subprojects.findAll()
-
-task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
-	description = 'Generates an aggregate report from all subprojects'
-
-	dependsOn(publishedProjects.test)
-
-	additionalSourceDirs = files(publishedProjects.sourceSets.main.allSource.srcDirs)
-	sourceDirectories = files(publishedProjects.sourceSets.main.allSource.srcDirs)
-	classDirectories = files(publishedProjects.sourceSets.main.output)
-	executionData = files(publishedProjects.jacocoTestReport.executionData)
-
-	doFirst {
-		executionData = files(executionData.findAll { it.exists() })
-	}
-
+task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+	dependsOn = subprojects.test
+	sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
+	classDirectories =  files(subprojects.sourceSets.main.output)
+	executionData = files(subprojects.jacocoTestReport.executionData)
 	reports {
-		html.enabled = true // human readable
-		xml.enabled = true // required by coveralls
+		html.enabled = true
+		xml.enabled = true
+		csv.enabled = false
 	}
-}
-
-coveralls {
-	sourceDirs = publishedProjects.sourceSets.main.allSource.srcDirs.flatten()
-	jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
-}
-
-tasks.coveralls {
-	dependsOn jacocoRootReport
 }
