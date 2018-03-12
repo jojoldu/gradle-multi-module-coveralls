@@ -32,7 +32,7 @@ Gradle 멀티 모듈이 처음이시라면 [이전 포스팅](http://jojoldu.tis
   
 build.gradle을 아래와 같이 변경합니다.
 
-```yaml
+```yml
 buildscript {
     ...
 	dependencies {
@@ -87,7 +87,7 @@ coveralls {
 
 그리고 ```.travis.yml```에는 ```after_success:```를 다음과 같이 수정합니다.
 
-```yaml
+```yml
 after_success:
 - ./gradlew jacocoRootReport coveralls
 ```
