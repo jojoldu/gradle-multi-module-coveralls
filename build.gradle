@@ -15,6 +15,10 @@ buildscript {
 allprojects {
 	apply plugin: 'com.github.kt3k.coveralls'
 	apply plugin: 'jacoco'
+
+	repositories {
+		jcenter()
+	}
 }
 
 subprojects {
@@ -37,21 +41,25 @@ subprojects {
 
 	jacocoTestReport {
 		reports {
-			html.enabled = true
-			xml.enabled = true
-			csv.enabled = false
+			html.enabled = true // human readable
+			xml.enabled = true // required by coveralls
 		}
 	}
 }
 
-task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+task jacocoRootReport(type: JacocoReport) {
+	description = 'Generates an aggregate report from all subprojects'
 	dependsOn = subprojects.test
 	sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
 	classDirectories =  files(subprojects.sourceSets.main.output)
 	executionData = files(subprojects.jacocoTestReport.executionData)
 	reports {
-		html.enabled = true
-		xml.enabled = true
-		csv.enabled = false
+		html.enabled = true // human readable
+		xml.enabled = true // required by coveralls
 	}
+}
+
+coveralls {
+	sourceDirs = subprojects.sourceSets.main.allSource.srcDirs.flatten()
+	jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
 }
